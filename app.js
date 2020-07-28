@@ -6,7 +6,7 @@ const app = express()
 app.set('view engine', 'ejs')
 
 //middlewares
-app.use(express.static('public'))
+app.use(express.static(__dirname + '/public'));
 
 
 //routes
