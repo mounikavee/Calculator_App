@@ -1,4 +1,4 @@
-@mixin vertical-align {
+/* @mixin vertical-align {
   position: relative;
   top: 50%;
   -webkit-transform: translateY(-50%);
@@ -91,4 +91,4 @@ p.message {
 
 .message:nth-child(odd) {
     background-color: #81BEF7;
-}
+} */

@@ -3,12 +3,109 @@
   <head>
     <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
     <link href="http://fonts.googleapis.com/css?family=Comfortaa" rel="stylesheet" type="text/css">
-    <link href="style.css" rel="stylesheet">
     <script type="text/javascript" src="http://calculatorexercise.herokuapp.com/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
     <title>Calculator App</title>
   </head>
+  <style>
+  @mixin vertical-align {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
 
+  * {
+      box-sizing: border-box;
+  }
+
+  html {
+      height: 100%;
+  }
+
+  body {
+      margin: 0px;
+      height: 100%;
+  }
+
+  header {
+      text-align: center;
+  }
+
+  h1 {
+      font-family: 'Comfortaa', sans-serif;
+      margin: 0px;
+  }
+
+  div#change_username, section#input_zone {
+      border: 5px outset #8258FA;
+  }
+
+  div#change_username {
+      height: 3%;
+      display: inline-block;
+      background-color: #BCA9F5;
+  }
+
+  section#chatroom {
+      border: 5px inset #8258FA;
+      height: 85%;
+      overflow: auto;
+  }
+
+  section#input_zone {
+      height: 7%;
+      text-align: center;
+      background-color: #BCA9F5;
+  }
+
+  .vertical-align {
+      position: relative;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      transform: translateY(-50%);
+  }
+
+  input#username {
+      font-family: 'Comfortaa', sans-serif;
+  }
+
+  input#message {
+      display: inline-block;
+      width: 88%;
+      height: 70%;
+      font-family: 'Comfortaa', sans-serif;
+      font-size: 2vh;
+  }
+
+  button#send_message {
+      display: inline-block;
+      height: 70%;
+      width: 10%;
+  }
+
+  p.message {
+      margin: 0px;
+      width: 100%;
+      height: 40px;
+      font-size: 2vh;
+      font-family: 'Comfortaa', sans-serif;
+      padding: 1vh;
+  }
+
+  .message:nth-child(even) {
+      background-color: #81DAF5;
+  }
+
+  .message:nth-child(odd) {
+      background-color: #81BEF7;
+  }
+
+
+
+  </style>
   <body>
     <header>
       <h1>Calculator App</h1>
@@ -33,6 +130,68 @@
     </section>
 
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script type="text/javascript" src="chat.js"></script>
+    <script>
+    $(function(){
+         //make connection
+     var url = 'http://calculatorexercise.herokuapp.com/' || '/'
+     var socket = io.connect(url)
+
+     //buttons and inputs
+     var message = $("#message")
+     var username = $("#username")
+     var send_message = $("#send_message")
+     var send_username = $("#send_username")
+     var chatroom = $("#chatroom")
+     var feedback = $("#feedback")
+      var count = 0
+     //Emit message
+     send_message.click(function(){
+       socket.emit('new_message', {message : message.val()})
+     })
+
+
+     //Listen on new_message
+     socket.on("new_message", (data) => {
+       feedback.html('');
+       message.val('');
+
+       if ((data.message == data.message.match(/^\d+$/)) || (data.message == "")) {
+         alert("Please enter a valid computation ex: 5+5");
+       }
+
+       else {
+         try {
+           count++
+           var computedvalue = eval(data.message)
+           chatroom.prepend("<p class='message'>" + data.username + ": " + data.message + "= " + computedvalue +"</p>")
+           if(count == 10) {
+             chatroom.children().last().remove();
+             count--
+           }
+         } catch (e) {
+           if (e instanceof SyntaxError) {
+               alert("Please enter a valid message");
+           }
+         }
+       }
+     })
+
+     //Emit a username
+     send_username.click(function(){
+       socket.emit('change_username', {username : username.val()})
+     })
+
+     //Emit typing
+     message.bind("keypress", () => {
+       socket.emit('typing')
+     })
+
+     //Listen on typing
+     socket.on('typing', (data) => {
+       feedback.html("<p><i>" + data.username + " is typing a computation to be calculated..." + "</i></p>")
+     })
+    });
+
+</script>
   </body>
 </html>
