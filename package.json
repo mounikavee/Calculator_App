@@ -4,7 +4,8 @@
   "description": "Calculator Exercise",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "postinstall": "ng build"
   },
   "author": "Mounika Vancha",
   "license": "ISC",
