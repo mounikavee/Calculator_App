@@ -1,6 +1,6 @@
 $(function(){
    	//make connection
-		var url = 'http://calculatorexercise.herokuapp.com/' || '/'
+		var url = 'https://calculatorexercise.herokuapp.com/' || '/'
 		var socket = io.connect(url)
 
 			//buttons and inputs
