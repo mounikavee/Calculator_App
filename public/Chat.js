@@ -1,9 +1,8 @@
 $(function(){
    	//make connection
-		var url = 'https://calculatorexercise.herokuapp.com/' || '/'
-		var socket = io.connect(url)
+	var socket = io.connect('/')
 
-			//buttons and inputs
+	//buttons and inputs
 	var message = $("#message")
 	var username = $("#username")
 	var send_message = $("#send_message")
@@ -25,22 +24,21 @@ $(function(){
 			alert("Please enter a valid computation ex: 5+5");
 		}
 
-		else {
-			try {
-				count++
-				var computedvalue = eval(data.message)
-				chatroom.prepend("<p class='message'>" + data.username + ": " + data.message + "= " + computedvalue +"</p>")
-				if(count == 10) {
-					chatroom.children().last().remove();
-					count--
-				}
-			} catch (e) {
-	    	if (e instanceof SyntaxError) {
-	        	alert("Please enter a valid message");
-	    	}
+	else {
+		try {
+			var computedvalue = eval(data.message)
+			chatroom.prepend("<p class='message'>" + data.username + ": " + data.message + "= " + computedvalue +"</p>")
+			count++
+		  if(count >= 10) {
+				chatroom.children().last().remove()
+			}
+		} catch (e) {
+			if (e instanceof SyntaxError) {
+					alert("Please enter a valid message");
 			}
 		}
-	})
+	}
+})
 
 	//Emit a username
 	send_username.click(function(){
