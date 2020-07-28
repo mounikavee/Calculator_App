@@ -1,8 +1,9 @@
 $(function(){
    	//make connection
-	var socket = io.connect('/')
+		var url = 'http://calculatorexercise.herokuapp.com/' || '/'
+		var socket = io.connect(url)
 
-	//buttons and inputs
+			//buttons and inputs
 	var message = $("#message")
 	var username = $("#username")
 	var send_message = $("#send_message")
